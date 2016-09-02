@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "name": "mentions-client-side-solution",
+    "id": "cd9ec931-a8a2-4eb6-81aa-b0618758e239",
+    "version": "1.0.0.0"
+  },
+  "paths": {
+    "zippedPackage": "mentions.spapp"
+  }
+}
