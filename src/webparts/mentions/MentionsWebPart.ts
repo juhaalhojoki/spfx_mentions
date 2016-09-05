@@ -66,20 +66,22 @@ export default class MentionsWebPart extends BaseClientSideWebPart<IMentionsWebP
 
     var editor = document.getElementById('tribute-mentions');
     this.load(editor);
-    editor.onblur = (e) => {
+    editor.onkeyup = (e) => {
         this.save(editor);
       };
+    // editor.onblur = (e) => {
+    //     this.save(editor);
+    //   };
   }
 
   private save(editor: any): void {
-    this.properties.description = editor.innerHTML;
-    this.load(editor);
+    console.log("saving: '" + editor.innerHTML) + "'";
+    this.properties.mentionscontent = editor.innerHTML;
   }
 
   private load(editor: any): void {
-    // if (this.properties.mentionscontent != undefined) {
-      editor.innerHTML = this.properties.description;
-    // }
+      console.log("loading: '" + this.properties.mentionscontent) + "'";
+      editor.innerHTML = this.properties.mentionscontent;
   }
 
   private initTribute(): void {
