@@ -13,7 +13,8 @@
     "description": { "default": "Mentions description" },
     "officeFabricIconFontName": "Page",
     "properties": {
-      "description": "Mentions"
+      "description": "",
+      "mentionscontent": ""
     }
   }]
 }

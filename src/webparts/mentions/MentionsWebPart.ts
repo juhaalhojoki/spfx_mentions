@@ -36,8 +36,9 @@ authConfig.endpoints[graphApi] = "https://graph.microsoft.com";
 
 export default class MentionsWebPart extends BaseClientSideWebPart<IMentionsWebPartProps> {
 
-  private userdocs: Array<any>;
+  private _userdocs: Array<any>;
   private _tribute: any;
+
 
   public constructor(context: IWebPartContext) {
     moduleLoader.loadCss("http://zurb.com/playground/uploads/upload/upload/430/tribute.css");
@@ -45,31 +46,46 @@ export default class MentionsWebPart extends BaseClientSideWebPart<IMentionsWebP
   }
 
   public render(): void {
+
     this.domElement.innerHTML = `
     <div id="signinBtn">
     <a href="javascript:;" class="ms-Button"><span class="ms-Button-label">Login to AAD</span></a>
     </div>
     <div id="signoutBtn">
-      Add a Text web part to the page and try the hashtag to get document links to the text from your Onedrive.
-      <br/><br/>
       <a href="javascript:;" class="ms-Button"><span class="ms-Button-label">Logout</span></a>
     </div>
     <!--<a href="javascript:;" id="myDocuments" class="ms-Button"><span class="ms-Button-label">List my documents</span></a>-->
     <ul id="documentList">
 
     </ul>
-    <div class="ms-TextField">
-      <textarea id="tribute-mentions" class="ms-TextField-field"></textarea>
+    <div class="ms-TextField"  id="tribute-mentions" contenteditable="true">
     </div>
     `;
     this.initTribute();
     this.manageAuthentication();
+
+    var editor = document.getElementById('tribute-mentions');
+    this.load(editor);
+    editor.onblur = (e) => {
+        this.save(editor);
+      };
+  }
+
+  private save(editor: any): void {
+    this.properties.description = editor.innerHTML;
+    this.load(editor);
+  }
+
+  private load(editor: any): void {
+    // if (this.properties.mentionscontent != undefined) {
+      editor.innerHTML = this.properties.description;
+    // }
   }
 
   private initTribute(): void {
     moduleLoader.loadScript('http://zurb.com/playground/uploads/upload/upload/435/tribute.js', 'Tribute').then((t: any): void => {
       this._tribute = t;
-	    this.userdocs = [];
+	    this._userdocs = [];
 
       var tribute: any = new this._tribute({
         collection: [
@@ -95,12 +111,12 @@ export default class MentionsWebPart extends BaseClientSideWebPart<IMentionsWebP
             fillAttr: 'value',
 
             // REQUIRED: array of objects to match
-            values: this.userdocs
+            values: this._userdocs
           }
         ]
       });
 
-      tribute.attach(document.getElementById('ql-editor-1'));
+      // tribute.attach(document.getElementById('ql-editor-1'));
       // tribute.attach(document.getElementsByClassName('ql-editor'));
       tribute.attach(document.getElementById('tribute-mentions'));
     });
@@ -135,7 +151,7 @@ export default class MentionsWebPart extends BaseClientSideWebPart<IMentionsWebP
           for (var document of documents) {
             // var documentLinkElement = `<li><a href='${document.webUrl}' target='_blank'>${document.name}</a></li>`;
             // $documentListElement.append(documentLinkElement);
-            this.userdocs.push({key: document.webUrl, value: document.name});
+            this._userdocs.push({key: document.webUrl, value: document.name});
             console.log("document " + document.name + " loaded");
           }
 
